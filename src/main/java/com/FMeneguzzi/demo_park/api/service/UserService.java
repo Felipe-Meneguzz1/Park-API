@@ -8,6 +8,8 @@ import com.FMeneguzzi.demo_park.api.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Service
 public class UserService {
@@ -24,5 +26,17 @@ public class UserService {
 		return userRepository.findById(id).orElseThrow(
 				() -> new RuntimeException("Usuario não encontrado")
 		);
+	}
+
+	@Transactional
+	public User editarSenha(Long id, String password) {
+		User user = buscarPorId(id);
+		user.setPassword(password);
+		return user;
+	}
+
+	@Transactional
+	public List<User> buscarTodos() {
+		return userRepository.findAll();
 	}
 }

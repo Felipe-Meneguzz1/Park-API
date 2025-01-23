@@ -10,6 +10,8 @@ import com.FMeneguzzi.demo_park.api.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("api/v1/users")
@@ -29,6 +31,17 @@ public class UserController {
         return ResponseEntity.ok(user1);
     }
 
+    @PatchMapping("/{id}")
+    public ResponseEntity<User> updatePassword(@PathVariable Long id, @RequestBody User user) {
+        User user1 = userService.editarSenha(id, user.getPassword());
+        return ResponseEntity.ok(user1);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<User>> getAll() {
+        List<User> users = userService.buscarTodos();
+        return ResponseEntity.ok(users);
+    }
 
 }
 
