@@ -6,6 +6,9 @@ import com.FMeneguzzi.demo_park.api.web.dto.UserResponseDto;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class UserMapper {
 
     public static User toUser(UserCreateDto createDto){
@@ -21,5 +24,9 @@ public class UserMapper {
                 mapper -> mapper.map(src -> role, UserResponseDto::setRole)
         );
         return mapperMain.map(user, UserResponseDto.class);
+    }
+
+    public static List<UserResponseDto> toListDto(List<User> user){
+        return user.stream().map(user1 -> toDto(user1)).collect(Collectors.toList());
     }
 }

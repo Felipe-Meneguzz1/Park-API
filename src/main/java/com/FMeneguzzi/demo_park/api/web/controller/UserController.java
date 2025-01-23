@@ -4,6 +4,7 @@ import com.FMeneguzzi.demo_park.api.web.dto.UserCreateDto;
 import com.FMeneguzzi.demo_park.api.web.dto.UserResponseDto;
 import com.FMeneguzzi.demo_park.api.web.dto.UserSenhaDto;
 import com.FMeneguzzi.demo_park.api.web.dto.mapper.UserMapper;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<UserResponseDto> create(@RequestBody UserCreateDto createDto) {
+    public ResponseEntity<UserResponseDto> create(@Valid @RequestBody UserCreateDto createDto) {
         User user = userService.salvar(UserMapper.toUser(createDto));
         return ResponseEntity.status(HttpStatus.CREATED).body(UserMapper.toDto(user));
     }
@@ -41,9 +42,9 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
     @GetMapping
-    public ResponseEntity<List<User>> getAll() {
+    public ResponseEntity<List<UserResponseDto>> getAll() {
         List<User> users = userService.buscarTodos();
-        return ResponseEntity.ok(users);
+        return ResponseEntity.ok(UserMapper.toListDto(users));
     }
 
 }
