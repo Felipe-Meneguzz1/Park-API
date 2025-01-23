@@ -1,5 +1,8 @@
 package com.FMeneguzzi.demo_park.api.web.controller;
 
+import com.FMeneguzzi.demo_park.api.web.dto.UserCreateDto;
+import com.FMeneguzzi.demo_park.api.web.dto.UserResponseDto;
+import com.FMeneguzzi.demo_park.api.web.dto.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,9 +23,9 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<User> create(@RequestBody User user) {
-    	User user1 = userService.salvar(user);
-    	return ResponseEntity.status(HttpStatus.CREATED).body(user1);
+    public ResponseEntity<UserResponseDto> create(@RequestBody UserCreateDto createDto) {
+    	User user1 = userService.salvar(UserMapper.toUser(createDto));
+    	return ResponseEntity.status(HttpStatus.CREATED).body(UserMapper.toDto(user1));
     }
 
     @GetMapping("/{id}")
