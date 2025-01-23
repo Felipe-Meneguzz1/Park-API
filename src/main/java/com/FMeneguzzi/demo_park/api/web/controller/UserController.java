@@ -11,15 +11,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.FMeneguzzi.demo_park.api.entities.User;
 import com.FMeneguzzi.demo_park.api.service.UserService;
 
-//import lombok.RequiredArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
-//@RequiredArgsConstructor
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("api/v1/users")
 public class UserController {
 
-	@Autowired
-    private UserService userService;
+    private final UserService userService;
 
     @PostMapping
     public ResponseEntity<User> create(@RequestBody User user) {
