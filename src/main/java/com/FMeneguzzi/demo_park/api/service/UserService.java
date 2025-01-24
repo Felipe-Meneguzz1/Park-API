@@ -1,5 +1,7 @@
 package com.FMeneguzzi.demo_park.api.service;
 
+import com.FMeneguzzi.demo_park.api.exception.UsernameUniqueViolationException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.FMeneguzzi.demo_park.api.entities.User;
@@ -17,8 +19,11 @@ public class UserService {
 
 	@Transactional
 	public User salvar(User user) {
-		return userRepository.save(user);
-		
+		try {
+			return userRepository.save(user);
+		}catch (DataIntegrityViolationException ex) {
+			throw new UsernameUniqueViolationException(String.format("Username {%s}já cadastrado", user.getUsername()));
+		}
 	}
 
 	@Transactional//(readOnly = true)
