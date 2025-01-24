@@ -1,5 +1,6 @@
 package com.FMeneguzzi.demo_park.api.service;
 
+import com.FMeneguzzi.demo_park.api.exception.EntityNotFoundException;
 import com.FMeneguzzi.demo_park.api.exception.UsernameUniqueViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -29,7 +30,7 @@ public class UserService {
 	@Transactional//(readOnly = true)
 	public User buscarPorId(Long id) {
 		return userRepository.findById(id).orElseThrow(
-				() -> new RuntimeException("Usuario não encontrado")
+				() -> new EntityNotFoundException(String.format("Usuario id=%s não encontrado", id))
 		);
 	}
 
