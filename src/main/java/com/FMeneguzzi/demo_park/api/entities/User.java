@@ -12,7 +12,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-@Getter @Setter @NoArgsConstructor @ToString
+@Getter @Setter @NoArgsConstructor
 @Entity
 @Table(name = "users")
 public class User implements Serializable{
