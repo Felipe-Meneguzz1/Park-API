@@ -4,6 +4,7 @@
 	import com.FMeneguzzi.demo_park.api.exception.UsernameUniqueViolationException;
 	import com.FMeneguzzi.demo_park.api.jwt.JwtUtils;
 	import org.springframework.dao.DataIntegrityViolationException;
+	import org.springframework.security.crypto.password.PasswordEncoder;
 	import org.springframework.stereotype.Service;
 
 	import com.FMeneguzzi.demo_park.api.entities.User;
@@ -18,10 +19,13 @@
 	@Service
 	public class UserService {
 		private final UserRepository userRepository;
+		private final PasswordEncoder passwordEncoder;
+
 
 		@Transactional
 		public User salvar(User user) {
 			try {
+				user.setPassword(passwordEncoder.encode(user.getPassword()));
 				return userRepository.save(user);
 			}catch (DataIntegrityViolationException ex) {
 				throw new UsernameUniqueViolationException(String.format("Username {%s}já cadastrado", user.getUsername()));
@@ -42,11 +46,11 @@
 			}
 
 			User user = buscarPorId(id);
-			if (!user.getPassword().equals(senhaAtual)) {
+			if (!passwordEncoder.matches(senhaAtual, user.getPassword())) {
 				throw new RuntimeException("Sua senha não confere.");
 			}
 
-			user.setPassword(novaSenha);
+			user.setPassword(passwordEncoder.encode(novaSenha));
 			return user;
 		}
 
