@@ -2,6 +2,7 @@
 
 	import com.FMeneguzzi.demo_park.api.exception.EntityNotFoundException;
 	import com.FMeneguzzi.demo_park.api.exception.UsernameUniqueViolationException;
+	import com.FMeneguzzi.demo_park.api.jwt.JwtUtils;
 	import org.springframework.dao.DataIntegrityViolationException;
 	import org.springframework.stereotype.Service;
 
@@ -53,4 +54,17 @@
 		public List<User> buscarTodos() {
 			return userRepository.findAll();
 		}
+
+		@Transactional
+        public User buscarPorUsername(String username) {
+			return userRepository.findByUsername(username).orElseThrow(
+					() -> new EntityNotFoundException(String.format("Usuario com '%s' não encontrado", username))
+			);
+        }
+
+		@Transactional
+		public User.Role buscarRolePorUsername(String username) {
+			return userRepository.findRoleByUsername(username);
+		}
+
 	}
