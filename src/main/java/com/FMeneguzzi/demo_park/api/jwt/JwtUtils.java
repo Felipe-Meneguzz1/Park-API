@@ -18,8 +18,8 @@ import static io.jsonwebtoken.Jwts.*;
 @Slf4j
 public class JwtUtils {
 
-    private static final String JWT_BEARER = "Bearer";
-    private static final String JWT_AUTHORIZATION = "Authorization";
+    public static final String JWT_BEARER = "Bearer";
+    public static final String JWT_AUTHORIZATION = "Authorization";
     private static final String SECRET_KEY = "0123456789-0123456789-0123456789";
     private static final long EXPIRE_DAYS = 0;
     private static final long EXPIRE_HOURS = 0;
