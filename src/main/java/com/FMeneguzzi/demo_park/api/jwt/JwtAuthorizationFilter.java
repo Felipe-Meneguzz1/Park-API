@@ -21,23 +21,28 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-       final String token = request.getHeader(JwtUtils.JWT_AUTHORIZATION);
-       if(token == null || !token.startsWith(JwtUtils.JWT_BEARER)){
-           log.info("JWT token esta nulo, vazio ou não esta iniciado com 'Bearer ' .");
-           filterChain.doFilter(request, response);
-           return;
-       }
+        final String token = request.getHeader(JwtUtils.JWT_AUTHORIZATION);
 
-       if(!JwtUtils.isTokenValid(token)){
-           log.warn("JWT esta invalido ou expirado.");
-           filterChain.doFilter(request, response);
-           return;
-       }
-       
-       String username = JwtUtils.getUsernameFromToken(token);
-       toAuthentication(request, username);
+        // Verifique se o token é nulo ou não começa com "Bearer", além de remover espaços extras
+        if (token == null || !token.startsWith(JwtUtils.JWT_BEARER)) {
+            log.info("JWT token esta nulo, vazio ou não esta iniciado com 'Bearer '.");
+            filterChain.doFilter(request, response);
+            return;
+        }
 
-       filterChain.doFilter(request, response);
+        // Limpeza do token: Remover espaços e quebras de linha
+        String cleanedToken = token.trim().replaceAll("\\s", "");
+
+        if (!JwtUtils.isTokenValid(cleanedToken)) {
+            log.warn("JWT esta invalido ou expirado.");
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        String username = JwtUtils.getUsernameFromToken(cleanedToken);
+        toAuthentication(request, username);
+
+        filterChain.doFilter(request, response);
     }
 
     private void toAuthentication(HttpServletRequest request, String username) {
