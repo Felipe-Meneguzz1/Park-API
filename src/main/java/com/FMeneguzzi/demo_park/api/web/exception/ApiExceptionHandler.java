@@ -1,5 +1,6 @@
 package com.FMeneguzzi.demo_park.api.web.exception;
 
+import com.FMeneguzzi.demo_park.api.exception.CpfUniqueViolationException;
 import com.FMeneguzzi.demo_park.api.exception.EntityNotFoundException;
 import com.FMeneguzzi.demo_park.api.exception.UsernameUniqueViolationException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -55,4 +56,14 @@ public class ApiExceptionHandler {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(new ErrorMessage(request, HttpStatus.FORBIDDEN, ex.getMessage()));
     }
+
+    @ExceptionHandler({UsernameUniqueViolationException.class, CpfUniqueViolationException.class})
+    public ResponseEntity<ErrorMessage> uniqueViolationException(RuntimeException ex, HttpServletRequest request) {
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(new ErrorMessage(request, HttpStatus.CONFLICT, ex.getMessage()));
+    }
+
+
 }
