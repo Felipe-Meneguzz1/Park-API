@@ -16,10 +16,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Tag(name = "Cliente", description = "Contem todas as operações relativas os recursos de um cliente")
 @RestController
@@ -43,7 +47,7 @@ public class ClienteControle {
 
             })
     @PostMapping
-   // @PreAuthorize("hasRole('CLIENTE')")
+   // @PreAuthorize("hasRole('CLIENT')")
     public ResponseEntity<ClienteResponseDto> create(@RequestBody @Valid ClienteCreateDto dto,
                                                      @AuthenticationPrincipal JwtUserDetails userDetails){
         Cliente cliente = ClienteMapper.toCliente(dto);
@@ -67,5 +71,12 @@ public class ClienteControle {
     public ResponseEntity<ClienteResponseDto> getById(@PathVariable Long id){
         Cliente cliente = clienteService.buscarPorId(id);
         return ResponseEntity.ok(ClienteMapper.toDto(cliente));
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping
+    public ResponseEntity<Page<Cliente>> getAll(Pageable pageable){
+        Page<Cliente> clientes = clienteService.buscarTodos(pageable);
+        return ResponseEntity.ok(clientes);
     }
 }
