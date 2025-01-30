@@ -47,7 +47,7 @@ public class VagaController {
                     )
             })
     @PostMapping
-    @PreAuthorize("hasHole('ADMIN')")
+    //@PreAuthorize("hasHole('ADMIN')")
     public ResponseEntity<Void> create(@RequestBody @Valid VagaCreateDto dto){
         Vaga vaga = VagaMapper.toVaga(dto);
         vagaService.salvar(vaga);
@@ -74,7 +74,7 @@ public class VagaController {
                     )
             })
     @GetMapping("/{codigo}")
-    @PreAuthorize("hasHole('ADMIN')")
+   // @PreAuthorize("hasHole('ADMIN')")
     public ResponseEntity<VagaResponseDto> getByCodigo(@PathVariable String codigo){
         Vaga vaga = vagaService.buscarPorCodigo(codigo);
         return ResponseEntity.ok(VagaMapper.toDto(vaga));
