@@ -5,6 +5,7 @@ import com.FMeneguzzi.demo_park.api.exception.CpfUniqueViolationException;
 import com.FMeneguzzi.demo_park.api.exception.EntityNotFoundException;
 import com.FMeneguzzi.demo_park.api.exception.UsernameUniqueViolationException;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.nio.file.AccessDeniedException;
-
+@Slf4j
 @RestControllerAdvice
 public class ApiExceptionHandler {
 
@@ -57,5 +58,15 @@ public class ApiExceptionHandler {
                 .body(new ErrorMessage(request, HttpStatus.CONFLICT, ex.getMessage()));
     }
 
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorMessage> internalServerErrorException(Exception ex, HttpServletRequest request) {
+        ErrorMessage error = new ErrorMessage(
+                request, HttpStatus.INTERNAL_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
+        log.error("Internal Server Error {} {} ", error, ex.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(error);
+    }
 
 }
